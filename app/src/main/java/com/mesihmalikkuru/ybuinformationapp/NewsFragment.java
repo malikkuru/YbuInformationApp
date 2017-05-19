@@ -1,12 +1,25 @@
 package com.mesihmalikkuru.ybuinformationapp;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
+
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.ArrayList;
 
 
 /**
@@ -22,6 +35,10 @@ public class NewsFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+
+    private static final String URL = "http://ybu.edu.tr/muhendislik/bilgisayar/";
+
+    private ArrayList<AnnouncementCombiner> listOfNews;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -58,6 +75,9 @@ public class NewsFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        listOfNews = new ArrayList<AnnouncementCombiner>();
+
+        new News().execute();
     }
 
     @Override
@@ -105,4 +125,56 @@ public class NewsFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
+    private class News extends AsyncTask<Void, Void, Void> {
+
+        ListView lvNewsListView;
+
+        @Override
+        protected Void doInBackground(Void... params) {
+
+            try {
+                Document document = Jsoup.connect(URL).get();
+                Elements cnContent = document.select("div.cnContent");
+                Elements cncItem = cnContent.get(0).select("div.cncItem");
+
+                for (int i = 0; i < cncItem.size(); i++) {
+
+                    String title = cncItem.get(i).select("a").text();
+                    String address = cncItem.get(i).select("a").attr("href");
+
+                    listOfNews.add(new AnnouncementCombiner(title, URL+address));
+
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+
+
+        }
+        @Override
+        protected void onPostExecute(Void result) {
+            lvNewsListView = (ListView) getView().findViewById(R.id.lv_news);
+
+            ArrayAdapter<AnnouncementCombiner> adaper = new ArrayAdapter<AnnouncementCombiner>(getActivity().getApplicationContext(), R.layout.list_view_item, R.id.tv_title, listOfNews);
+
+            lvNewsListView.setAdapter(adaper);
+
+            lvNewsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                    Intent intent = new Intent(getActivity(), InformationActivity.class);
+
+                    intent.putExtra("announcement combiner", listOfNews.get(position));
+
+                    startActivity(intent);
+                }
+            });
+        }
+    }
+
+
 }
