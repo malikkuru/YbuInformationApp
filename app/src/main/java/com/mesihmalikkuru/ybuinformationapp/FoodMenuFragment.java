@@ -2,11 +2,21 @@ package com.mesihmalikkuru.ybuinformationapp;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import java.io.IOException;
 
 
 /**
@@ -23,11 +33,15 @@ public class FoodMenuFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
+    static final String URL =  "http://ybu.edu.tr/sks/";
+
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
+    private Document doc;
 
     public FoodMenuFragment() {
         // Required empty public constructor
@@ -58,6 +72,9 @@ public class FoodMenuFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        new Foods().execute();
+
     }
 
     @Override
@@ -104,5 +121,66 @@ public class FoodMenuFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    private class Foods extends AsyncTask<Void, Void, Void> {
+
+        String Yemek1;
+        String Yemek2;
+        String Yemek3;
+        String Yemek4;
+
+        TextView tvYemek1;
+        TextView tvYemek2;
+        TextView tvYemek3;
+        TextView tvYemek4;
+
+        @Override
+        protected Void doInBackground(Void... params) {
+
+            try {
+
+                Document document = Jsoup.connect(URL).get();
+                Elements tbody = document
+                        .select("tbody");
+                Elements tr = tbody.get(1).select("tr");
+
+                Elements td = tr.get(2).select("td");
+                Elements h5 = td.get(0).select("h5");
+                Yemek1 = h5.text();
+
+                td = tr.get(3).select("td");
+                h5 = td.get(0).select("h5");
+                Yemek2 = h5.text();
+
+                td = tr.get(4).select("td");
+                h5 = td.get(0).select("h5");
+                Yemek3 = h5.text();
+
+                td = tr.get(5).select("td");
+                h5 = td.get(0).select("h5");
+                Yemek4 = h5.text();
+
+
+
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(Void result) {
+            tvYemek1 = (TextView) getView().findViewById(R.id.tv_yemek_1);
+            tvYemek2 = (TextView) getView().findViewById(R.id.tv_yemek_2);
+            tvYemek3 = (TextView) getView().findViewById(R.id.tv_yemek_3);
+            tvYemek4 = (TextView) getView().findViewById(R.id.tv_yemek_4);
+
+            tvYemek1.setText(Yemek1);
+            tvYemek2.setText(Yemek2);
+            tvYemek3.setText(Yemek3);
+            tvYemek4.setText(Yemek4);
+
+        }
     }
 }

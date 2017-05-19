@@ -1,13 +1,72 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.mesihmalikkuru.ybuinformationapp.FoodMenuFragment">
 
     <!-- TODO: Update blank fragment layout -->
+
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:text="YBU YEMEK LİSTESİ"
+        android:gravity="center"
+        android:layout_marginTop="10dp"
+        android:textSize="30sp"
+        android:layout_marginBottom="10dp"
+        android:textColor="#000000"/>
 
-</FrameLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="10dp"
+        android:orientation="vertical"
+        android:background="@drawable/yemek_listesi_card_bg">
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="yemek 1"
+            android:id="@+id/tv_yemek_1"
+            android:layout_weight="1"
+            android:layout_margin="15dp"
+            android:textSize="20dp"
+            android:textColor="#000000"
+            android:gravity="center"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="yemek 2"
+            android:id="@+id/tv_yemek_2"
+            android:layout_weight="1"
+            android:layout_margin="15dp"
+            android:textSize="20dp"
+            android:textColor="#000000"
+            android:gravity="center"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="yemek 3"
+            android:id="@+id/tv_yemek_3"
+            android:layout_weight="1"
+            android:layout_margin="15dp"
+            android:textSize="20dp"
+            android:textColor="#000000"
+            android:gravity="center"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="yemek 4"
+            android:id="@+id/tv_yemek_4"
+            android:layout_weight="1"
+            android:layout_margin="15dp"
+            android:textSize="20dp"
+            android:textColor="#000000"
+            android:gravity="center"/>
+
+    </LinearLayout>
+
+
+</LinearLayout>
