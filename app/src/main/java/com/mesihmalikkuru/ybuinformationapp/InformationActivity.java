@@ -38,14 +38,20 @@ public class InformationActivity extends AppCompatActivity {
         Document document = Jsoup.connect(url).get();
 
         Elements contentLeft = document.select("div#content_left");
+        Elements p = contentLeft.get(0).select("p");
 
         String fullText = "";
 
-        for (int i = 0; i < contentLeft.size(); i++) {
+        for (int i = 1; i < p.size(); i++) {
 
-            fullText = fullText + "\n" +contentLeft.get(i).text();
+            if(i == 1) {
+                fullText = p.get(i).text();
+            } else if(i == p.size() - 1) {
+                fullText = fullText + p.get(i).text();
+            } else {
+                fullText = fullText + "\n\n" + p.get(i).text();
+            }
         }
-
 
         return fullText;
 
